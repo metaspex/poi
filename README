@@ -1,3 +1,5 @@
+Warning: you need the Metaspex product to compile this application. Please contact us at info@metaspex.com to get access to the Metaspex product.
+
 This sample Metaspex application leverages an in-memory index between Web server threads.
 It is a points of reference management application that allows to create points of reference with
 a latitude, a longitude and a category, and allows to search them in a map area. The search specifies
