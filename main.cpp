@@ -65,7 +65,9 @@ namespace poi {
   class poi: public root<>
   {
     HX2A_ROOT(poi, "poi", 1, root,
-	      (name, pos, category));
+	      ((name, "name"),
+	       (pos, "pos"),
+	       (category, "category")));
   public:
 
     // We could have derived types or more flexible, a separate category type a poi bears a strong link
@@ -79,7 +81,7 @@ namespace poi {
 		     restaurant = 3,
 		     shopping = 4
     };
-    
+
     poi(string n, const position_r& p, category_t c):
       name(*this, n),
       pos(*this, p), // own accepts position_r.
@@ -93,9 +95,9 @@ namespace poi {
 
     static constexpr tag_t index_by_last_save_timestamp = "poi_by_lst";
     
-    slot<string, "name"> name;
-    own<position, "pos"> pos; // The position type comes from Metaspex's Foundation Ontology.
-    slot<category_t, "category"> category;
+    slot<string> name;
+    own<position> pos; // The position type comes from Metaspex's Foundation Ontology.
+    slot<category_t> category;
   };
 
   // Definition of the index type, using a Metaspex kdcache.
@@ -127,7 +129,8 @@ namespace poi {
   class poi_data_payload: public element<>
   {
     HX2A_ELEMENT(poi_data_payload, "poi_data_pld", element,
-		 (name, pos));
+		 ((name, "name"),
+		  (pos, "position")));
   public:
 
     poi_data_payload(const poi_r& p):
@@ -136,25 +139,25 @@ namespace poi {
     {
     }
 
-    slot<string, "name"> name;
-    own<position, "position"> pos;
+    slot<string> name;
+    own<position> pos;
   };
 
   // Let's reuse and extend by adding the category.
   class poi_create_payload: public poi_data_payload
   {
     HX2A_ELEMENT(poi_create_payload, "poi_create_pld", poi_data_payload,
-		 (category));
+		 ((category, "category")));
   public:
 
-    slot<poi::category_t, "category"> category;
+    slot<poi::category_t> category;
   };
  
   // We don't include the category, it is part of the search criteria, no need to return it.
   class poi_search_data_payload: public poi_data_payload
   {
     HX2A_ELEMENT(poi_search_data_payload, "poi_search_data_pld", poi_data_payload,
-		 (id));
+		 ((id, "id")));
   public:
 
     poi_search_data_payload(const poi_r& p):
@@ -163,13 +166,13 @@ namespace poi {
     {
     }
     
-    slot<doc_id, "id"> id;
+    slot<doc_id> id;
   };
 
   class pois_search_data_payload: public element<>
   {
     HX2A_ELEMENT(pois_search_data_payload, "pois_search_data_pld", element,
-		 (pois_data));
+		 ((pois_data, "pois")));
   public:
 
     pois_search_data_payload():
@@ -181,7 +184,7 @@ namespace poi {
       pois_data.push_back(pd);
     }
     
-    own_list<poi_search_data_payload, "pois"> pois_data;
+    own_list<poi_search_data_payload> pois_data;
   };
 
   // This is the type expected to search for a point of interest.
@@ -190,7 +193,7 @@ namespace poi {
   class area_and_category: public area
   {
     HX2A_ELEMENT(area_and_category, "area_and_category", area,
-		 (category));
+		 ((category, "category")));
   public:
 
     area_and_category(
@@ -204,8 +207,8 @@ namespace poi {
       category(*this, category)
     {
     }
-    
-    slot<poi::category_t, "category"> category;
+
+    slot<poi::category_t> category;
   };
 
   // Application exceptions definitions.
@@ -241,7 +244,7 @@ namespace poi {
       db::connector c{"hx2a"};
 
       // Retrieving the point of interest. It is a ptr and not a rfr because the document might not exist and get will return null.
-      poi_r point = poi::get(c, q->get_id()).or_throw<document_does_not_exist>();
+      poi_r point = root_get<poi>(c, q->get_id()).or_throw<document_does_not_exist>();
       
       // This marks the document for removal, except if a rollback happens before the end of the service. A rollback is automatically
       // triggered in case of exception. As we return right after, the document will be removed.
