@@ -64,7 +64,7 @@ namespace poi {
   // We could add an address to a POI, taking the Foundation Ontology reusable address.
   class poi: public root<>
   {
-    HX2A_ROOT(poi, "poi", 1, root,
+    HX2A_TYPE(poi, "poi", root,
 	      ((name, "name"),
 	       (pos, "pos"),
 	       (category, "category")));
@@ -128,9 +128,9 @@ namespace poi {
   // A reusable base class for poi payloads.
   class poi_data_payload: public element<>
   {
-    HX2A_ELEMENT(poi_data_payload, "poi_data_pld", element,
-		 ((name, "name"),
-		  (pos, "position")));
+    HX2A_TYPE(poi_data_payload, "poi_data_pld", element,
+              ((name, "name"),
+               (pos, "position")));
   public:
 
     poi_data_payload(const poi_r& p):
@@ -146,8 +146,8 @@ namespace poi {
   // Let's reuse and extend by adding the category.
   class poi_create_payload: public poi_data_payload
   {
-    HX2A_ELEMENT(poi_create_payload, "poi_create_pld", poi_data_payload,
-		 ((category, "category")));
+    HX2A_TYPE(poi_create_payload, "poi_create_pld", poi_data_payload,
+              ((category, "category")));
   public:
 
     slot<poi::category_t> category;
@@ -156,8 +156,8 @@ namespace poi {
   // We don't include the category, it is part of the search criteria, no need to return it.
   class poi_search_data_payload: public poi_data_payload
   {
-    HX2A_ELEMENT(poi_search_data_payload, "poi_search_data_pld", poi_data_payload,
-		 ((id, "id")));
+    HX2A_TYPE(poi_search_data_payload, "poi_search_data_pld", poi_data_payload,
+              ((id, "id")));
   public:
 
     poi_search_data_payload(const poi_r& p):
@@ -171,8 +171,8 @@ namespace poi {
 
   class pois_search_data_payload: public element<>
   {
-    HX2A_ELEMENT(pois_search_data_payload, "pois_search_data_pld", element,
-		 ((pois_data, "pois")));
+    HX2A_TYPE(pois_search_data_payload, "pois_search_data_pld", element,
+              ((pois_data, "pois")));
   public:
 
     pois_search_data_payload():
@@ -192,8 +192,8 @@ namespace poi {
   // We reuse the area type from Metaspex's Foundation Ontology.
   class area_and_category: public area
   {
-    HX2A_ELEMENT(area_and_category, "area_and_category", area,
-		 ((category, "category")));
+    HX2A_TYPE(area_and_category, "area_and_category", area,
+              ((category, "category")));
   public:
 
     area_and_category(
