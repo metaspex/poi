@@ -1,4 +1,4 @@
-Warning: you need the Metaspex product to compile this application. Please contact us at info@metaspex.com to get access to Metaspex.
+Warning: you need the [Metaspex](http://metaspex.com) product to compile this application. Please contact us at info@metaspex.com to get access to [Metaspex](http://metaspex.com).
 
 This sample Metaspex application leverages an in-memory index between Web server threads.
 It is a points of reference management application that allows to create points of reference with
@@ -27,7 +27,7 @@ WARNING: In order to share large amounts of in-memory data in a Web server, you 
 Web server configuration so that it spawns threads and not processes. To reconfigure Nginx so that
 it spawns threads, modify Nginx configuration file to have:
 
-worker_processes 1;
+    worker_processes 1;
 
 That will instruct Nginx to start only one process that will manage requests in threads that can share
 memory.
@@ -75,7 +75,7 @@ To test that the module was properly installed (use port 8080 for the default Ap
 
     curl http://localhost:8081/_
 
-It should display the "Ave" message, which is something like:
+It should display the `"Ave"` message, which is something like:
 
     {"hx2a":"Ave","Nginx version":"1.20.2","hx2a version":"2.4.0","hx2a build date":"Mar 14 2025 09:01:41"}
 
@@ -95,7 +95,7 @@ Now with a proper position:
 
 The POI was properly created.
 
-The call is successful. Looking at the corresponding document from Couchbase's Console using b67e92ae3ea749a69ccde715cd5f4991 as the document identifier, we find:
+The call is successful. Looking at the corresponding document from Couchbase's Console using `b67e92ae3ea749a69ccde715cd5f4991` as the document identifier, we find:
 
     {
       "@T": {
