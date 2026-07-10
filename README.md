@@ -41,21 +41,21 @@ To compile:
 It will compile the application for use alongside Apache and Nginx, both in debug and optimized
 versions.
 
-The hx2a.conf file is by default set to perform persistence in Couchbase, which must be installed before
+The `hx2a.conf` file is by default set to perform persistence in [Couchbase](https://www.couchbase.com/), which must be installed before
 running this sample, if you choose to run it on this database.
 The configuration file contains dummy credentials (bucket user/password), they need to be updated to match
 the credentials you chose when installing Couchbase.
 Please consult this reference documentation page to do so (copy/paste the URI in your browser):
 
-/usr/local/metaspex/doc/reference/hx2a.conf.html
+    /usr/local/metaspex/doc/reference/hx2a.conf.html
 
 In particular, have a look at the `database` and `index` keywords.
 
-You can also change the database to MongoDB or CouchDB.
+You can also change the database to [MongoDB](https://www.mongodb.com/) or [CouchDB](https://couchdb.apache.org/).
 Do not change the logical name `hx2a`, it is used in the application source.
 You do not have to change the UUID of the database. Changing it would be required in production.
 
-The creation of the database and the index are made in the configure.sh script supplied.
+The creation of the database and the index are made in the `configure.sh` script supplied.
 Consult the code of the script and update the credentials and possibly other configuration parameters.
 Then run it:
 
@@ -63,9 +63,9 @@ Then run it:
 
 In production the UUID of the database should be obtained through a call to the `hx2a` utility. Consult:
 
-/usr/local/metaspex/doc/reference/mkdb.html
+    /usr/local/metaspex/doc/reference/mkdb.html
 
-Go down (cd) into the Web server of your choice (apache or nginx) and the variant (debug or opt).
+Go down (`cd`) into the Web server of your choice (`apache` or `nginx`) and the variant (`debug` or `opt`).
 
 To load (or reload) the module in the Web server:
 
