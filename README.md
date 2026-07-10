@@ -36,7 +36,7 @@ keeping an independent large cache. The test will still work, albeit not as rapi
 
 To compile:
 
-make
+    make
 
 It will compile the application for use alongside Apache and Nginx, both in debug and optimized
 versions.
@@ -49,19 +49,19 @@ Please consult this reference documentation page to do so (copy/paste the URI in
 
 /usr/local/metaspex/doc/reference/hx2a.conf.html
 
-In particular, have a look at the 'database' and 'index' keywords.
+In particular, have a look at the `database` and `index` keywords.
 
 You can also change the database to MongoDB or CouchDB.
-Do not change the logical name "hx2a", it is used in the application source.
+Do not change the logical name `hx2a`, it is used in the application source.
 You do not have to change the UUID of the database. Changing it would be required in production.
 
 The creation of the database and the index are made in the configure.sh script supplied.
 Consult the code of the script and update the credentials and possibly other configuration parameters.
 Then run it:
 
-./configure.sh
+    ./configure.sh
 
-In production the UUID of the database should be obtained through a call to the hx2a utility. Consult:
+In production the UUID of the database should be obtained through a call to the `hx2a` utility. Consult:
 
 /usr/local/metaspex/doc/reference/mkdb.html
 
@@ -69,61 +69,61 @@ Go down (cd) into the Web server of your choice (apache or nginx) and the varian
 
 To load (or reload) the module in the Web server:
 
-make server
+    make server
 
 To test that the module was properly installed (use port 8080 for the default Apache configuration and 8081 for Nginx):
 
-curl http://localhost:8081/_
+    curl http://localhost:8081/_
 
 It should display the "Ave" message, which is something like:
 
-{"hx2a":"Ave","Nginx version":"1.20.2","hx2a version":"2.4.0","hx2a build date":"Mar 14 2025 09:01:41"}
+    {"hx2a":"Ave","Nginx version":"1.20.2","hx2a version":"2.4.0","hx2a build date":"Mar 14 2025 09:01:41"}
 
 You can then exercise the services. Let's start with POI creation:
 
 Omitting the position:
 
-$ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "category": 0}'
-{"@exc":{"code":127,"acode":"pmiss","msg":"Position is missing."}}
+    $ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "category": 0}'
+    {"@exc":{"code":127,"acode":"pmiss","msg":"Position is missing."}}
 
 This is the exception we decided to throw. The server reports the error gracefully.
 
 Now with a proper position:
 
-$ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "position": {"l": 15026, "L": 333}, "category": 0}'
-{"id":"b67e92ae3ea749a69ccde715cd5f4991"}
+    $ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "position": {"l": 15026, "L": 333}, "category": 0}'
+    {"id":"b67e92ae3ea749a69ccde715cd5f4991"}
 
 The POI was properly created.
 
 The call is successful. Looking at the corresponding document from Couchbase's Console using b67e92ae3ea749a69ccde715cd5f4991 as the document identifier, we find:
 
-{
-  "@T": {
-    "poi": 0
-  },
-  "@V": 1,
-  "@R": 1,
-  "@C": 1687800866,
-  "@S": 1687800866,
-  "@v": {},
-  "name": "EV Charging Metaspex",
-  "category": 0,
-  "pos": {
-    "@T": "@pos",
-    "l": 15026,
-    "L": 333
-  }
-}
+    {
+      "@T": {
+        "poi": 0
+      },
+      "@V": 1,
+      "@R": 1,
+      "@C": 1687800866,
+      "@S": 1687800866,
+      "@v": {},
+      "name": "EV Charging Metaspex",
+      "category": 0,
+      "pos": {
+        "@T": "@pos",
+        "l": 15026,
+        "L": 333
+      }
+    }
 
-The '@C' contains the Unix timestamp of the creation of the contact.
+The `@C` contains the Unix timestamp of the creation of the contact.
 
 Note that Couchbase's console has a bug which causes sometimes the console to be unable to display or search a document.
 You might need to refresh the screen numerous times to be able to look for a document.
 
 Let's search in an area where there is no POI:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 15, "lM": 16, "Lm": 333, "LM": 333, "category": 0}'
-{}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 15, "lM": 16, "Lm": 333, "LM": 333, "category": 0}'
+    {}
 
 Nothing was found.
 
@@ -131,79 +131,78 @@ Wait at least 10 seconds.
 
 Let's search now for the POI we just created with latitude and longitude intervals exactly equal to the ones we specified on the POI:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 0}'
-{"pois":[{"name":"EV Charging Metaspex","id":"b67e92ae3ea749a69ccde715cd5f4991","position":{"l":15026,"L":333}}]}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 0}'
+    {"pois":[{"name":"EV Charging Metaspex","id":"b67e92ae3ea749a69ccde715cd5f4991","position":{"l":15026,"L":333}}]}
 
 It is properly found.
 
-Let's ask the server to calculate the timing of the service (note the "?t" at the end of the service name):
+Let's ask the server to calculate the timing of the service (note the `?t` at the end of the service name):
 
-$ curl 'http://localhost:8081/poi_search?t' -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 0}'
-{"pois":[{"name":"EV Charging Metaspex","id":"b67e92ae3ea749a69ccde715cd5f4991","position":{"l":15026,"L":333}}],"@t":{"real":259580,"cpu":200380}}
+    $ curl 'http://localhost:8081/poi_search?t' -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 0}'
+    {"pois":[{"name":"EV Charging Metaspex","id":"b67e92ae3ea749a69ccde715cd5f4991","position":{"l":15026,"L":333}}],"@t":{"real":259580,"cpu":200380}}
 
 It reports that it took 200380 nanoseconds to process the service call from receiving it to finding the document and reply to the client. That's 0.2 millisecond.
 Growing the number of POIs should grow this figure only marginally (logarithmically), thanks to the efficiency of the kdtree datastructure.
 
 Let's search with the same intervals but with a different category:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 1}'
-{}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 1}'
+    {}
 
 As expected, nothing is found, the POI is not of category 1.
 
 Let's test removing the POI:
 
-$ curl http://localhost:8081/poi_delete -d '{"id": "b67e92ae3ea749a69ccde715cd5f4991"}'
-{}
+    $ curl http://localhost:8081/poi_delete -d '{"id": "b67e92ae3ea749a69ccde715cd5f4991"}'
+    {}
 
 And search again in the right category:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 0}'
-{}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 15026, "lM": 15026, "Lm": 333, "LM": 333, "category": 0}'
+    {}
 
 Let's recreate it:
 
-$ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "position": {"l": 15026, "L": 333}, "category": 0}'
-{"id":"d224b5ed879c4720bac5d29aa7cb4767"}
+    $ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "position": {"l": 15026, "L": 333}, "category": 0}'
+    {"id":"d224b5ed879c4720bac5d29aa7cb4767"}
 
 Wait at least 10 seconds, and search wider around it:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 0}'
-{"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}}]}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 0}'
+    {"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}}]}
 
 Let's add another POI near it, with category 1:
 
-$ curl http://localhost:8081/poi_create -d '{"name": "Metaspex Headquarters", "position": {"l": 15000, "L": 400}, "category": 1}'
-{"id":"a837e4c2aeac4d4a9f7e2dac16e7d584"}
+    $ curl http://localhost:8081/poi_create -d '{"name": "Metaspex Headquarters", "position": {"l": 15000, "L": 400}, "category": 1}'
+    {"id":"a837e4c2aeac4d4a9f7e2dac16e7d584"}
 
 Let's search in the wide area with category 0:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 0}'
-{"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}}]}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 0}'
+    {"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}}]}
 
 Let's search with the same area with category 1:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 1}'
-{"pois":[{"name":"Metaspex Headquarters","id":"a837e4c2aeac4d4a9f7e2dac16e7d584","position":{"l":15000,"L":400}}]}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 1}'
+    {"pois":[{"name":"Metaspex Headquarters","id":"a837e4c2aeac4d4a9f7e2dac16e7d584","position":{"l":15000,"L":400}}]}
 
 Let's add another category 0 near the first:
 
-$ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "position": {"l": 15030, "L": 340}, "category": 0}'
-{"id":"19041035a496452bb7d39cb769005884"}
+    $ curl http://localhost:8081/poi_create -d '{"name": "EV Charging Metaspex", "position": {"l": 15030, "L": 340}, "category": 0}'
+    {"id":"19041035a496452bb7d39cb769005884"}
 
 Wait at least 10 seconds.
 
 Let's search both of them:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 0}'
-{"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}},{"name":"EV Charging Metaspex","id":"19041035a496452bb7d39cb769005884","position":{"l":15030,"L":340}}]}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 10000, "lM": 20000, "Lm": 300, "LM": 400, "category": 0}'
+    {"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}},{"name":"EV Charging Metaspex","id":"19041035a496452bb7d39cb769005884","position":{"l":15030,"L":340}}]}
 
 We found the two of them.
 
 Narrowing down the search around the first category 0:
 
-$ curl http://localhost:8081/poi_search -d '{"lm": 15025, "lM": 15028, "Lm": 332, "LM": 334, "category": 0}'
-{"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}}]}
+    $ curl http://localhost:8081/poi_search -d '{"lm": 15025, "lM": 15028, "Lm": 332, "LM": 334, "category": 0}'
+    {"pois":[{"name":"EV Charging Metaspex","id":"d224b5ed879c4720bac5d29aa7cb4767","position":{"l":15026,"L":333}}]}
 
 We find only one.
-
